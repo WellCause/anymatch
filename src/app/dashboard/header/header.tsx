@@ -11,16 +11,36 @@ import {
   Avatar,
   Button,
 } from "@nextui-org/react";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { ArrowDownTrayIcon, BarsArrowDownIcon, BarsArrowUpIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
+import NavLogo from "../navigation/nav-logo";
 type HeaderProps = {
   onMinimizeButtonClick: any,
-  isNavMinimized: boolean
+  isNavMinimized: boolean,
+  onNavButtonClick: any,
+  isNavHidden: boolean
 }
 
-export default function Header({ onMinimizeButtonClick, isNavMinimized }: HeaderProps) {
+function NavIcon({ isNavHidden }: { isNavHidden: boolean }) {
+  if (isNavHidden) {
+    return <BarsArrowDownIcon className={clsx(
+      "w-7"
+    )} />
+  }
+
+  return <BarsArrowUpIcon className={clsx(
+    "w-7"
+  )} />
+}
+
+export default function Header(
+  { onMinimizeButtonClick,
+    isNavMinimized,
+    onNavButtonClick,
+    isNavHidden
+  }: HeaderProps) {
   return (
-    <Navbar as="div" maxWidth="full" classNames={{ wrapper: "p-3 md:pt-2 md:pb-2 md:pr-6 md:pl-6" }} className="drop-shadow-md shadow-slate-800 bg-transparent backdrop-filter-none justify-end row-start-1 md:row-start-1 md:col-start-2 max-w-none">
+    <Navbar as="div" maxWidth="full" classNames={{ wrapper: "p-3 md:pt-2 md:pb-2 md:pr-6 md:pl-6" }} className="drop-shadow-md shadow-slate-800 bg-slate-800 md:bg-transparent backdrop-filter-none justify-end row-start-1 md:row-start-1 md:col-start-2 max-w-none">
       <NavbarContent as="div">
         <Button onClick={onMinimizeButtonClick} isIconOnly className="bg-slate-800 hover:bg-slate-700 rounded-lg hidden md:flex">
           <ArrowDownTrayIcon className={clsx(
@@ -30,14 +50,18 @@ export default function Header({ onMinimizeButtonClick, isNavMinimized }: Header
             }
           )} />
         </Button>
-        <Button onClick={onMinimizeButtonClick} isIconOnly className="bg-slate-800 hover:bg-slate-700 rounded-lg md:hidden flex">
-          <ArrowDownTrayIcon className={clsx(
-            "w-7 transition-transform rotate-90",
-            {
-              "rotate-[270deg]": isNavMinimized
-            }
-          )} />
+        <Button onClick={onNavButtonClick} isIconOnly className={clsx(
+          "bg-slate-800 hover:bg-slate-700 rounded-lg md:hidden flex",
+          {
+            "bg-slate-700": !isNavHidden
+          }
+        )}
+        >
+          <NavIcon isNavHidden={isNavHidden}></NavIcon>
         </Button>
+      </NavbarContent>
+      <NavbarContent as="div" className="md:hidden max-w-[64px]">
+        <NavLogo />
       </NavbarContent>
       <NavbarContent as="div" justify="end">
         <Dropdown placement="bottom-end">
